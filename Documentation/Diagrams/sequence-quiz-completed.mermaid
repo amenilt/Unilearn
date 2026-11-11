@@ -1,0 +1,15 @@
+sequenceDiagram
+  actor E as Étudiant
+  participant GW as Gateway
+  participant MS2 as MS2 Quiz
+  participant MS1 as MS1 Cours
+  participant MQ as RabbitMQ
+  participant MS5 as MS5 Duels et badges
+  E->>GW: POST /api/quizzes/{id}/attempts
+  GW->>MS2: requête avec jeton
+  MS2->>MS1: OpenFeign : le cours existe ?
+  MS1-->>MS2: 200
+  MS2-->>GW: 201 score
+  MS2--)MQ: quiz.completed
+  MQ--)MS5: quiz.completed
+  MS5->>MS5: points et badges

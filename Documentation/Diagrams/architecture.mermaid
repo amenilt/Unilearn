@@ -1,0 +1,35 @@
+flowchart TB
+  Web[Application Web]
+  Desk[Application Desktop Java]
+  GW[Spring Cloud Gateway]
+  KC[Keycloak<br/>authentification et rôles]
+  EU[Eureka<br/>registre des services]
+  CF[Config Server]
+  MQ[(RabbitMQ)]
+  Web --> GW
+  Desk --> GW
+  GW -. jeton .-> KC
+  GW --> MS1[MS1 Cours<br/>Spring Boot]
+  GW --> MS2[MS2 Quiz<br/>Spring Boot]
+  GW --> MS3[MS3 Réclamations<br/>Spring Boot]
+  GW --> MS4[MS4 Forum Q&A<br/>Spring Boot]
+  GW --> MS5[MS5 Duels et badges<br/>FastAPI]
+  MS1 --- DB1[(MongoDB)]
+  MS2 --- DB2[(PostgreSQL)]
+  MS3 --- DB3[(MySQL)]
+  MS4 --- DB4[(MongoDB)]
+  MS5 --- DB5[(PostgreSQL)]
+  MS2 -- OpenFeign --> MS1
+  MS5 -- OpenFeign --> MS2
+  MS2 -- quiz.completed --> MQ
+  MS4 -- forum.answer.accepted --> MQ
+  MQ --> MS5
+  MS1 -.-> EU
+  MS2 -.-> EU
+  MS3 -.-> EU
+  MS4 -.-> EU
+  MS5 -.-> EU
+  MS1 -.-> CF
+  MS2 -.-> CF
+  MS3 -.-> CF
+  MS4 -.-> CF

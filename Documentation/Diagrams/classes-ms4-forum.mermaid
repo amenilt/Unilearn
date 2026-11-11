@@ -1,0 +1,4 @@
+classDiagram
+  class Question { +String id; +String title; +String content; +String authorId; +List~String~ tags }
+  class Answer { +String id; +String content; +String authorId; +int votes; +boolean accepted }
+  Question "1" --> "many" Answer

@@ -1,0 +1,6 @@
+classDiagram
+  class Duel { +int id; +String player1; +String player2; +String quizId; +String winner }
+  class Badge { +int id; +String name; +String criterion }
+  class AwardedBadge { +String userId; +int badgeId; +Date date }
+  class LeaderboardEntry { +String userId; +int points }
+  Badge "1" --> "many" AwardedBadge

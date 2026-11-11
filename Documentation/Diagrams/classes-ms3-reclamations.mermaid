@@ -1,0 +1,6 @@
+classDiagram
+  class Claim { +Long id; +String userId; +String subject; +String description; +ClaimStatus status; +Date createdAt }
+  class ClaimReply { +Long id; +String message; +String authorId; +Date date }
+  class ClaimStatus { <<enumeration>> OPEN IN_PROGRESS RESOLVED REJECTED }
+  Claim "1" --> "many" ClaimReply
+  Claim --> ClaimStatus
