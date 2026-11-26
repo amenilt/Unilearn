@@ -137,17 +137,38 @@ Ensuite : `POST /api/duels/1/accept`, puis `POST /api/duels/1/answer {"userId":"
 
 Grâce à `eureka.client.healthcheck.enabled=true`, si `/actuator/health` passe DOWN, Eureka affiche l'instance **DOWN** et les autres services ne l'appellent plus.
 
-**Question de l'atelier – `http.server.requests` :** `COUNT` est le nombre de requêtes traitées depuis le démarrage, `TOTAL_TIME` leur durée cumulée et `MAX` la durée de la plus lente (en secondes, sur une fenêtre récente). `?tag=status:200` filtre pour ne garder que les réponses 200. _Valeurs relevées : COUNT = …, MAX = … s (à compléter avec ta capture)._
+**Question de l'atelier – `http.server.requests` :** `COUNT` est le nombre de requêtes traitées depuis le démarrage, `TOTAL_TIME` leur durée cumulée et `MAX` la durée de la plus lente (en secondes, sur une fenêtre récente). `?tag=status:200` filtre pour ne garder que les réponses 200. **Valeurs relevées sur l'instance 8083** (après la batterie de tests de l'API, voir `ms3-metrics-http.png`) :
+
+| Mesure | Toutes les requêtes | `?tag=status:200` |
+|---|---|---|
+| COUNT | **29** requêtes | **19** requêtes |
+| TOTAL_TIME | 0,544 s | 0,259 s |
+| MAX | **0,198 s** | 0,051 s |
+
+Sur 29 requêtes, 19 ont répondu 200. Les 10 autres sont des réponses 201 (création), 204 (suppression), 400, 404 et 409 : les tests d'erreur, plus le `favicon` que le navigateur demande (404, uri `/**`). C'est ce que montre `availableTags.status = [200, 201, 204, 400, 404, 409]`. La requête la plus lente (0,198 s) est la toute première : à froid, Hibernate et la JVM chauffent encore.
 
 ---
 
 ## 6. Captures (`Documentation/Homework-S5/`)
 
-- `eureka-8761.png`, `eureka-8762.png` : MS3 et MS5 avec 2 instances chacun
-- `ms3-health.png`, `ms3-info.png`, `ms3-metrics.png`, `ms5-health.png`
+Captures prises sur ma machine, avec tous les services lancés (2 Eureka, 2 MS3, 2 MS5).
+
+| Capture | Contenu |
+|---|---|
+| `eureka-8761.png`, `eureka-8762.png` | les deux dashboards : EUREKA (2), MS3-RECLAMATIONS (2 : 8083, 8093), MS5-DUELS (2 : 8085, 8095), tous UP, chaque serveur voit l'autre en replica |
+| `ms3-health.png` | `/actuator/health` : UP, avec `claims`, `db` (H2), `diskSpace`, `discoveryComposite`, `eureka`, `ping` |
+| `ms3-info.png` | `/actuator/info` |
+| `ms3-metrics-list.png` | `/actuator/metrics` |
+| `ms3-metrics-http.png`, `ms3-metrics-http-200.png` | `http.server.requests`, sans filtre puis filtré sur `status:200` |
+| `ms3-metrics-memory.png` | `jvm.memory.used` |
+| `ms3-loggers.png` | `/actuator/loggers/tn.esprit.unilearn` |
+| `ms3-claims.png` | `GET /api/claims` |
+| `ms3-instance-8093.png` | la 2e instance de MS3 répond |
+| `ms5-health.png`, `ms5-info.png`, `ms5-leaderboard.png`, `ms5-instance-8095.png` | MS5 (Node.js) |
 
 ![Eureka 8761](../../Documentation/Homework-S5/eureka-8761.png)
 ![Eureka 8762](../../Documentation/Homework-S5/eureka-8762.png)
+![Health MS3](../../Documentation/Homework-S5/ms3-health.png)
 
 Collection Postman : `Documentation/Homework-S5/MS3_Reclamations.postman_collection.json`.
 
