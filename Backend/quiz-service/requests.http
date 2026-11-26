@@ -1,5 +1,6 @@
 @baseUrl = http://localhost:8082
 @quizId = 1
+@tempQuizId = 3
 @missingQuizId = 99999
 
 ### Actuator et informations d'instance
@@ -23,70 +24,15 @@ GET {{baseUrl}}/actuator/loggers
 ###
 GET {{baseUrl}}/api/quizzes/instance-info
 
-### Créer un quiz (remplacer @quizId par l'id renvoyé)
-POST {{baseUrl}}/api/quizzes
-Content-Type: application/json
-
-{
-  "courseId": 1,
-  "title": "Quiz REST de démonstration",
-  "duration": 20,
-  "questions": [
-    {
-      "text": "Quelle annotation expose une API REST ?",
-      "points": 2,
-      "options": [
-        { "text": "@RestController", "correct": true },
-        { "text": "@Entity", "correct": false },
-        { "text": "@Repository", "correct": false },
-        { "text": "@Configuration", "correct": false }
-      ]
-    }
-  ]
-}
-
 ### Liste et filtre par cours
 GET {{baseUrl}}/api/quizzes
 ###
 GET {{baseUrl}}/api/quizzes?courseId=1
 
-### Lire le quiz (aucun champ correct ne doit apparaître)
+### Lire le quiz 1 (aucun champ correct ne doit apparaître)
 GET {{baseUrl}}/api/quizzes/{{quizId}}
 
-### Modifier le quiz (PUT remplace les questions)
-PUT {{baseUrl}}/api/quizzes/{{quizId}}
-Content-Type: application/json
-
-{
-  "courseId": 1,
-  "title": "Quiz REST modifié",
-  "duration": 25,
-  "questions": [
-    {
-      "text": "Quel outil construit le projet ?",
-      "points": 2,
-      "options": [
-        { "text": "Maven", "correct": true },
-        { "text": "React", "correct": false }
-      ]
-    }
-  ]
-}
-
-### Ajouter une question
-POST {{baseUrl}}/api/quizzes/{{quizId}}/questions
-Content-Type: application/json
-
-{
-  "text": "Combien vaut 2 + 2 ?",
-  "points": 1,
-  "options": [
-    { "text": "4", "correct": true },
-    { "text": "5", "correct": false }
-  ]
-}
-
-### Soumettre la tentative (utiliser questionId / optionId du GET)
+### Soumettre la tentative : 200 avec le score
 POST {{baseUrl}}/api/quizzes/{{quizId}}/submit
 Content-Type: application/json
 
@@ -111,6 +57,28 @@ Content-Type: application/json
 ### Résultats
 GET {{baseUrl}}/api/quizzes/{{quizId}}/results
 
+### Créer un quiz : 201 (noter l'id renvoyé, mettre @tempQuizId à cette valeur)
+POST {{baseUrl}}/api/quizzes
+Content-Type: application/json
+
+{
+  "courseId": 1,
+  "title": "Quiz REST de démonstration",
+  "duration": 20,
+  "questions": [
+    {
+      "text": "Quelle annotation expose une API REST ?",
+      "points": 2,
+      "options": [
+        { "text": "@RestController", "correct": true },
+        { "text": "@Entity", "correct": false },
+        { "text": "@Repository", "correct": false },
+        { "text": "@Configuration", "correct": false }
+      ]
+    }
+  ]
+}
+
 ### 400 : requête invalide
 POST {{baseUrl}}/api/quizzes
 Content-Type: application/json
@@ -120,5 +88,38 @@ Content-Type: application/json
 ### 404 : quiz absent
 GET {{baseUrl}}/api/quizzes/{{missingQuizId}}
 
-### DELETE (à lancer en dernier)
-DELETE {{baseUrl}}/api/quizzes/{{quizId}}
+### Modifier le quiz créé (PUT remplace les questions)
+PUT {{baseUrl}}/api/quizzes/{{tempQuizId}}
+Content-Type: application/json
+
+{
+  "courseId": 1,
+  "title": "Quiz REST modifié",
+  "duration": 25,
+  "questions": [
+    {
+      "text": "Quel outil construit le projet ?",
+      "points": 2,
+      "options": [
+        { "text": "Maven", "correct": true },
+        { "text": "React", "correct": false }
+      ]
+    }
+  ]
+}
+
+### Ajouter une question au quiz créé
+POST {{baseUrl}}/api/quizzes/{{tempQuizId}}/questions
+Content-Type: application/json
+
+{
+  "text": "Combien vaut 2 + 2 ?",
+  "points": 1,
+  "options": [
+    { "text": "4", "correct": true },
+    { "text": "5", "correct": false }
+  ]
+}
+
+### DELETE du quiz créé (à lancer en dernier) : 204
+DELETE {{baseUrl}}/api/quizzes/{{tempQuizId}}
