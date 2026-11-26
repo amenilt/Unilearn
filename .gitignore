@@ -1,0 +1,27 @@
+### Java / Maven
+target/
+**/target/
+.m2/
+
+### Python
+__pycache__/
+.pytest_cache/
+.venv/
+venv/
+*.py[cod]
+
+### Node / Angular
+node_modules/
+dist/
+.angular/
+
+### IDEs and local environment
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.env
+.env.*
+!.env.example
+
+### Logs
+*.log
