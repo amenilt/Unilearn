@@ -133,12 +133,45 @@ Exécuter `mvn clean test`. Les exemples complets REST Client sont dans [`reques
 
 ## Captures d'écran
 
-Déposer les captures réelles dans ces emplacements :
+Les captures de la démonstration sont disponibles dans [`docs/img/`](docs/img/) :
 
-- `docs/img/eureka-dashboard.png` — dashboard Eureka (instances et réplication)
-- `docs/img/quiz-2-instances.png` — enregistrement des deux instances du quiz
-- `docs/img/actuator-health.png` — santé et vérification de la base
-- `docs/img/quiz-api.png` — appels REST de démonstration
+### Eureka et instances
+
+Dashboard Eureka : deux pairs répliqués et les deux instances `QUIZ-SERVICE` enregistrées.
+
+![Dashboard Eureka avec les deux instances Quiz](docs/img/eureka-dashboard.png)
+
+Réponse de l'instance Quiz sur le port 8092 :
+
+![Informations de l'instance Quiz 8092](docs/img/instance-8092.png)
+
+### API Quiz
+
+Liste des quiz de démonstration :
+
+![Liste des quiz](docs/img/quiz-api.png)
+
+Détail du premier quiz :
+
+![Détail du quiz 1](docs/img/quiz-api-get1.png)
+
+Réponse uniforme pour un quiz introuvable (404) :
+
+![Erreur API 404](docs/img/quiz-api-404.png)
+
+### Actuator
+
+État de santé, base H2, découverte Eureka et probes :
+
+![Santé Actuator](docs/img/actuator-health.png)
+
+Informations de l'application :
+
+![Informations Actuator](docs/img/actuator-info.png)
+
+Métriques exposées :
+
+![Métriques Actuator](docs/img/actuator-metrics.png)
 
 ## Intégration
 
