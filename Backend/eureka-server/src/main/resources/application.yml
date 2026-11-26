@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: eureka-server
+  profiles:
+    default: peer1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,env,beans,mappings,loggers,httpexchanges
+  endpoint:
+    health:
+      show-details: always
+  info:
+    env:
+      enabled: true
+info:
+  app:
+    name: eureka-server
+    description: Registre de services UniLearn
+    version: 1.0.0
+    owner: Ameni Ltaifi
