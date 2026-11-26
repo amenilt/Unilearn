@@ -1,8 +1,26 @@
 classDiagram
-  class Quiz { +Long id; +String title; +String courseId }
-  class Question { +Long id; +String text; +String correctOption }
-  class Option { +Long id; +String label }
-  class Attempt { +Long id; +String userId; +int score; +Date date }
-  Quiz "1" --> "many" Question
-  Question "1" --> "many" Option
-  Quiz "1" --> "many" Attempt
+  Quiz "1" --> "0..*" Question : questions (cascade, orphan removal)
+  Question "1" --> "2..*" Option : options (cascade, orphan removal)
+  Quiz "1" --> "0..*" Attempt : attempts
+  class Quiz {
+    Long id
+    Long courseId
+    String title
+    int duration
+  }
+  class Question {
+    Long id
+    String text
+    int points
+  }
+  class Option {
+    Long id
+    String text
+    boolean correct
+  }
+  class Attempt {
+    Long id
+    String studentId
+    int score
+    LocalDateTime date
+  }

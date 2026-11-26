@@ -30,13 +30,19 @@ La digitalisation de l’éducation pousse les universités à utiliser des plat
 
 | Membre | Microservice responsable |
 |--|---|
-1 | MS1 Cours |
-2 | MS2 Quiz |
-3 | MS3 Réclamations |
-4 | MS4 Forum Q&A |
+| Ayoub Jleli | MS1 Cours |
+| Ameni Ltaifi | Eureka + MS2 Quiz |
+| Mohamed Rhouma | MS3 Réclamations |
+| Akrem Jouini | MS4 Forum Q&A |
 | Toute l’équipe | MS5 Duels et badges (microservice commun), Frontend |
 
 Gestion des tâches : [lien Trello ou GitHub Projects]
+
+### Eureka + MS2 Quiz — Ameni Ltaifi
+
+Le serveur Eureka à deux pairs et le microservice Quiz sont dans `Backend/eureka-server/` et `Backend/quiz-service/`. Guide, commandes, contrat REST et Actuator : [README MS2](Backend/quiz-service/README.md).
+
+Capture du dashboard Eureka (à ajouter après le lancement des deux pairs et des deux instances Quiz) : `Backend/quiz-service/docs/img/eureka-dashboard.png`.
 
 ## 4. Architecture
 
