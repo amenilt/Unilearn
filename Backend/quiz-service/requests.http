@@ -1,0 +1,124 @@
+@baseUrl = http://localhost:8082
+@quizId = 1
+@missingQuizId = 99999
+
+### Actuator et informations d'instance
+GET {{baseUrl}}/actuator/health
+###
+GET {{baseUrl}}/actuator/info
+###
+GET {{baseUrl}}/actuator/metrics
+###
+GET {{baseUrl}}/actuator/metrics/http.server.requests
+###
+GET {{baseUrl}}/actuator/prometheus
+###
+GET {{baseUrl}}/actuator/mappings
+###
+GET {{baseUrl}}/actuator/env
+###
+GET {{baseUrl}}/actuator/beans
+###
+GET {{baseUrl}}/actuator/loggers
+###
+GET {{baseUrl}}/api/quizzes/instance-info
+
+### Créer un quiz (remplacer @quizId par l'id renvoyé)
+POST {{baseUrl}}/api/quizzes
+Content-Type: application/json
+
+{
+  "courseId": 1,
+  "title": "Quiz REST de démonstration",
+  "duration": 20,
+  "questions": [
+    {
+      "text": "Quelle annotation expose une API REST ?",
+      "points": 2,
+      "options": [
+        { "text": "@RestController", "correct": true },
+        { "text": "@Entity", "correct": false },
+        { "text": "@Repository", "correct": false },
+        { "text": "@Configuration", "correct": false }
+      ]
+    }
+  ]
+}
+
+### Liste et filtre par cours
+GET {{baseUrl}}/api/quizzes
+###
+GET {{baseUrl}}/api/quizzes?courseId=1
+
+### Lire le quiz (aucun champ correct ne doit apparaître)
+GET {{baseUrl}}/api/quizzes/{{quizId}}
+
+### Modifier le quiz (PUT remplace les questions)
+PUT {{baseUrl}}/api/quizzes/{{quizId}}
+Content-Type: application/json
+
+{
+  "courseId": 1,
+  "title": "Quiz REST modifié",
+  "duration": 25,
+  "questions": [
+    {
+      "text": "Quel outil construit le projet ?",
+      "points": 2,
+      "options": [
+        { "text": "Maven", "correct": true },
+        { "text": "React", "correct": false }
+      ]
+    }
+  ]
+}
+
+### Ajouter une question
+POST {{baseUrl}}/api/quizzes/{{quizId}}/questions
+Content-Type: application/json
+
+{
+  "text": "Combien vaut 2 + 2 ?",
+  "points": 1,
+  "options": [
+    { "text": "4", "correct": true },
+    { "text": "5", "correct": false }
+  ]
+}
+
+### Soumettre la tentative (utiliser questionId / optionId du GET)
+POST {{baseUrl}}/api/quizzes/{{quizId}}/submit
+Content-Type: application/json
+
+{
+  "studentId": "student-demo-1",
+  "answers": [
+    { "questionId": 1, "optionId": 1 }
+  ]
+}
+
+### Rejouer le même étudiant : 409 Conflict
+POST {{baseUrl}}/api/quizzes/{{quizId}}/submit
+Content-Type: application/json
+
+{
+  "studentId": "student-demo-1",
+  "answers": [
+    { "questionId": 1, "optionId": 1 }
+  ]
+}
+
+### Résultats
+GET {{baseUrl}}/api/quizzes/{{quizId}}/results
+
+### 400 : requête invalide
+POST {{baseUrl}}/api/quizzes
+Content-Type: application/json
+
+{ "courseId": null, "title": "", "duration": 0, "questions": [] }
+
+### 404 : quiz absent
+GET {{baseUrl}}/api/quizzes/{{missingQuizId}}
+
+### DELETE (à lancer en dernier)
+DELETE {{baseUrl}}/api/quizzes/{{quizId}}

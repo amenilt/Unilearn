@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: quiz-service
+  datasource:
+    url: ${QUIZ_DB_URL:jdbc:postgresql://localhost:5432/quiz_db}
+    username: ${QUIZ_DB_USERNAME:quiz_user}
+    password: ${QUIZ_DB_PASSWORD:quiz_dev_password}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+server:
+  port: ${SERVER_PORT:8082}
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_DEFAULT_ZONE:http://eureka1:8761/eureka/,http://eureka2:8762/eureka/}
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,env,beans,mappings,loggers,httpexchanges
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+  info:
+    env:
+      enabled: true
+info:
+  app:
+    name: quiz-service
+    description: MS2 Quiz - UniLearn
+    version: 1.0.0
+    owner: Ameni Ltaifi
