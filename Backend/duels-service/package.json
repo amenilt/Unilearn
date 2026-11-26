@@ -1,0 +1,14 @@
+{
+  "name": "ms5-duels",
+  "version": "1.0.0",
+  "description": "MS5 Duels et Badges (UniLearn) - Node.js / Express, client Eureka, WebSocket",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "eureka-js-client": "^4.5.0",
+    "express": "^4.21.2",
+    "ws": "^8.18.0"
+  }
+}

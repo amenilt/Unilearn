@@ -1,0 +1,479 @@
+{
+  "info": {
+    "name": "UniLearn – MS3 Réclamations (Mohamed Rhouma)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Eureka",
+      "item": [
+        {
+          "name": "Registre complet (8761)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8761/eureka/apps"
+          }
+        },
+        {
+          "name": "Registre complet (8762)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8762/eureka/apps"
+          }
+        }
+      ]
+    },
+    {
+      "name": "MS3 Réclamations",
+      "item": [
+        {
+          "name": "Hello (port)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8083/api/claims/hello"
+          }
+        },
+        {
+          "name": "Lister",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8083/api/claims"
+          }
+        },
+        {
+          "name": "Filtrer OPEN",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8083/api/claims?status=OPEN"
+          }
+        },
+        {
+          "name": "Déposer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8083/api/claims",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": \"etu-001\",\n  \"courseId\": 1,\n  \"subject\": \"Quiz mal corrigé\",\n  \"description\": \"La question 3 est comptée fausse\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Déposer invalide (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8083/api/claims",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": \"\",\n  \"courseId\": null,\n  \"subject\": \"\",\n  \"description\": \"\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Détail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8083/api/claims/1"
+          }
+        },
+        {
+          "name": "Modifier",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8083/api/claims/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": \"etu-001\",\n  \"courseId\": 1,\n  \"subject\": \"Note du quiz incorrecte\",\n  \"description\": \"Détails ajoutés\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Statut -> IN_PROGRESS",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8083/api/claims/1/status",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"IN_PROGRESS\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Statut -> RESOLVED",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8083/api/claims/1/status",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"RESOLVED\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Statut -> OPEN (409)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8083/api/claims/1/status",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"OPEN\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Commenter",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8083/api/claims/1/comments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"authorId\": \"ens-010\",\n  \"text\": \"Corrigé, merci\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Commentaires",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8083/api/claims/1/comments"
+          }
+        },
+        {
+          "name": "Revérifier les cours",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8083/api/claims/reverify-courses"
+          }
+        },
+        {
+          "name": "Supprimer",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8083/api/claims/2"
+          }
+        },
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8083/actuator/health"
+          }
+        },
+        {
+          "name": "Info",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8083/actuator/info"
+          }
+        },
+        {
+          "name": "Metrics HTTP",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8083/actuator/metrics/http.server.requests"
+          }
+        },
+        {
+          "name": "Metrics HTTP status 200",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8083/actuator/metrics/http.server.requests?tag=status:200"
+          }
+        },
+        {
+          "name": "Logger -> DEBUG",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8083/actuator/loggers/tn.esprit.unilearn",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"configuredLevel\": \"DEBUG\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "MS5 Duels (Node.js)",
+      "item": [
+        {
+          "name": "Hello (port)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8085/api/duels/hello"
+          }
+        },
+        {
+          "name": "Créer duel",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8085/api/duels",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"challengerId\": \"etu-001\",\n  \"opponentId\": \"etu-002\",\n  \"quizId\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Accepter",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8085/api/duels/1/accept"
+          }
+        },
+        {
+          "name": "Répondre",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8085/api/duels/1/answer",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"etu-001\",\n  \"questionId\": 1,\n  \"optionId\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Détail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8085/api/duels/1"
+          }
+        },
+        {
+          "name": "Badges",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8085/api/badges"
+          }
+        },
+        {
+          "name": "Badges d'un étudiant",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8085/api/badges/etu-001"
+          }
+        },
+        {
+          "name": "Classement",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8085/api/leaderboard"
+          }
+        },
+        {
+          "name": "Notifications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8085/api/notifications/etu-002"
+          }
+        },
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8085/health"
+          }
+        },
+        {
+          "name": "Info",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "http://localhost:8085/info"
+          }
+        }
+      ]
+    }
+  ]
+}
