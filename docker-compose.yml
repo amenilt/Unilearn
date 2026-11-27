@@ -19,5 +19,94 @@ services:
       retries: 20
       start_period: 20s
 
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.8.2
+    command: ["start-dev", "--import-realm"]
+    restart: unless-stopped
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN_USERNAME:-admin}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:?Set KEYCLOAK_ADMIN_PASSWORD in .env}
+      KC_HEALTH_ENABLED: "true"
+      KC_HOSTNAME: ${KEYCLOAK_HOSTNAME:-http://localhost:8180}
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
+      KC_HTTP_ENABLED: "true"
+    ports:
+      - "127.0.0.1:${KEYCLOAK_HTTP_PORT:-8180}:8080"
+    volumes:
+      - keycloak-data:/opt/keycloak/data
+      - ./infra/keycloak:/opt/keycloak/data/import:ro
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          bash -c '{ printf "GET /health/ready HTTP/1.0\r\n\r\n" >&0;
+          grep -q "HTTP/1.0 200"; } 0<>/dev/tcp/127.0.0.1/9000'
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+
+  postgres-ms6:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${MS6_DB_NAME:-unilearn_ms6}
+      POSTGRES_USER: ${MS6_DB_USER:-unilearn_ms6}
+      POSTGRES_PASSWORD: ${MS6_DB_PASSWORD:?Set MS6_DB_PASSWORD in .env}
+    ports:
+      - "127.0.0.1:${MS6_POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - ms6-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready --username=\"$${POSTGRES_USER}\" --dbname=\"$${POSTGRES_DB}\""]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+  ms6-ai:
+    build:
+      context: ./ai/ms6-unilearn-ai
+    restart: unless-stopped
+    depends_on:
+      postgres-ms6:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+    environment:
+      MS6_HOST: 0.0.0.0
+      MS6_PORT: 8086
+      MS6_DB_HOST: postgres-ms6
+      MS6_DB_PORT: 5432
+      MS6_DB_NAME: ${MS6_DB_NAME:-unilearn_ms6}
+      MS6_DB_USER: ${MS6_DB_USER:-unilearn_ms6}
+      MS6_DB_PASSWORD: ${MS6_DB_PASSWORD:?Set MS6_DB_PASSWORD in .env}
+      MS6_DEMO_MODE: ${MS6_DEMO_MODE:-false}
+      MS6_DEMO_DATABASE_URL: ${MS6_DEMO_DATABASE_URL:-sqlite+pysqlite:///:memory:}
+      MS6_KEYCLOAK_ISSUER_URI: ${MS6_KEYCLOAK_ISSUER_URI:-http://localhost:8180/realms/unilearn}
+      MS6_KEYCLOAK_JWK_SET_URI: ${MS6_KEYCLOAK_JWK_SET_URI:-http://keycloak:8080/realms/unilearn/protocol/openid-connect/certs}
+      MS6_MS1_COURSES_URL: ${MS6_MS1_COURSES_URL:-http://host.docker.internal:8081/api/courses}
+      MS6_LLM_BASE_URL: ${MS6_LLM_BASE_URL:-}
+      MS6_LLM_API_KEY: ${MS6_LLM_API_KEY:-}
+      MS6_LLM_MODEL: ${MS6_LLM_MODEL:-}
+      MS6_LLM_TIMEOUT_SECONDS: ${MS6_LLM_TIMEOUT_SECONDS:-20}
+      MS6_RISK_LOW_SCORE_THRESHOLD: ${MS6_RISK_LOW_SCORE_THRESHOLD:-50}
+      MS6_RISK_SCORE_DECLINE_THRESHOLD: ${MS6_RISK_SCORE_DECLINE_THRESHOLD:-15}
+      MS6_RISK_COMPLETION_THRESHOLD: ${MS6_RISK_COMPLETION_THRESHOLD:-0.6}
+      MS6_RISK_MODERATE_SCORE: ${MS6_RISK_MODERATE_SCORE:-30}
+      MS6_RISK_HIGH_SCORE: ${MS6_RISK_HIGH_SCORE:-60}
+    ports:
+      - "127.0.0.1:${MS6_API_PORT:-8086}:8086"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8086/health/ready', timeout=2)"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 30s
+
 volumes:
+  keycloak-data:
   mysql-ms1-data:
+  ms6-postgres-data:

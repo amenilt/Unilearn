@@ -1,0 +1,61 @@
+{
+  "realm": "unilearn",
+  "enabled": true,
+  "displayName": "UniLearn Local Development",
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "roles": {
+    "realm": [
+      { "name": "STUDENT", "description": "Synthetic student role for local development" },
+      { "name": "TEACHER", "description": "Synthetic teacher role for local development" },
+      { "name": "ADMIN", "description": "Synthetic administrator role for local development" }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "unilearn-ms6-demo",
+      "name": "UniLearn MS6 Local Demo",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "redirectUris": [
+        "http://localhost:8086/*",
+        "http://127.0.0.1:8086/*"
+      ],
+      "webOrigins": [
+        "http://localhost:8086",
+        "http://127.0.0.1:8086"
+      ],
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "profile",
+        "roles",
+        "email"
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "demo-student-1",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Demo",
+      "lastName": "Student One",
+      "email": "demo-student-1@example.test",
+      "realmRoles": ["STUDENT"]
+    },
+    {
+      "username": "demo-student-2",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Demo",
+      "lastName": "Student Two",
+      "email": "demo-student-2@example.test",
+      "realmRoles": ["STUDENT"]
+    }
+  ]
+}
