@@ -253,6 +253,22 @@ Dans IntelliJ : Run → Edit Configurations → Copy Configuration → VM option
 
 MS4 s'enregistre sur les deux serveurs Eureka `8761` et `8762` (variable `EUREKA_SERVER_URL`).
 
+### Deux serveurs Eureka (8761 et 8762)
+
+Pour que les deux serveurs affichent tous les microservices, ils doivent se répliquer (peers). Lancer le même `eureka-server` deux fois avec ces arguments (IntelliJ : Program arguments) :
+
+```powershell
+# Eureka 1
+$env:SERVER_PORT = '8761'
+java -jar backend/platform/eureka-server/target/eureka-server-1.0.0-SNAPSHOT.jar --eureka.client.register-with-eureka=true --eureka.client.fetch-registry=true --eureka.client.service-url.defaultZone=http://127.0.0.1:8762/eureka/ --eureka.instance.hostname=localhost
+
+# Eureka 2
+$env:SERVER_PORT = '8762'
+java -jar backend/platform/eureka-server/target/eureka-server-1.0.0-SNAPSHOT.jar --eureka.client.register-with-eureka=true --eureka.client.fetch-registry=true --eureka.client.service-url.defaultZone=http://localhost:8761/eureka/ --eureka.instance.hostname=127.0.0.1
+```
+
+`localhost` et `127.0.0.1` servent à donner deux noms d'hôte différents aux peers : avec le même nom, Eureka ne réplique pas.
+
 ### API MS4
 
 | Méthode | URL | Codes |
