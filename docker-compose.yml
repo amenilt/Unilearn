@@ -1,0 +1,23 @@
+services:
+  mysql-ms1:
+    image: mysql:8.0
+    container_name: unilearn-mysql-ms1
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MS1_DB_NAME:-unilearn_courses}
+      MYSQL_USER: ${MS1_DB_USER:-unilearn_ms1}
+      MYSQL_PASSWORD: ${MS1_DB_PASSWORD:?Set MS1_DB_PASSWORD in .env}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env}
+    ports:
+      - "${MS1_MYSQL_PORT:-3306}:3306"
+    volumes:
+      - mysql-ms1-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping --host=127.0.0.1 --user=root --password=\"$${MYSQL_ROOT_PASSWORD}\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+volumes:
+  mysql-ms1-data:
