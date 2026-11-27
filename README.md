@@ -91,7 +91,8 @@ UniLearn/
 │   │   ├── eureka-server/
 │   │   └── gateway/
 │   └── services/
-│       └── ms1-courses/
+│       ├── ms1-courses/
+│       └── ms4-forum/
 ├── docs/
 │   └── architecture.md
 ├── infra/
@@ -224,6 +225,60 @@ MS1 fournit notamment :
 
 Les rôles JWT sont associés aux autorités `STUDENT`, `TEACHER` et `ADMIN`. Les enseignants ne gèrent que leurs propres cours ; les administrateurs peuvent gérer tous les cours.
 
+## MS4 Forum Q&A
+
+MS4 gère les questions du forum, leurs réponses, les votes et la réponse acceptée.
+
+- Technologie : Spring Boot · Spring Data MongoDB · client Eureka · Actuator · Springdoc
+- Base : MongoDB `unilearn_forum`, collection `questions`
+- Port : `8084` · Nom Eureka : `MS4-FORUM`
+- Modèle : une `Question` contient plusieurs `Answer` (sous-documents imbriqués, association 1 — *)
+
+### Démarrer MS4
+
+```powershell
+docker compose up -d mongo-ms4
+$mavenRepo = Join-Path (Get-Location) '.m2\repository'
+mvn "-Dmaven.repo.local=$mavenRepo" -f backend/pom.xml -pl services/ms4-forum spring-boot:run
+```
+
+Deuxième instance (port `8094`) :
+
+```powershell
+$env:SERVER_PORT = '8094'
+mvn "-Dmaven.repo.local=$mavenRepo" -f backend/pom.xml -pl services/ms4-forum spring-boot:run
+```
+
+Dans IntelliJ : Run → Edit Configurations → Copy Configuration → VM options `-Dserver.port=8094`.
+
+MS4 s'enregistre sur les deux serveurs Eureka `8761` et `8762` (variable `EUREKA_SERVER_URL`).
+
+### API MS4
+
+| Méthode | URL | Codes |
+|---|---|---|
+| POST | `/api/questions` | 201, 400 |
+| GET | `/api/questions` · `/api/questions?course={id}` | 200 |
+| GET | `/api/questions/{id}` | 200, 404 |
+| PUT | `/api/questions/{id}` | 200, 400, 404 |
+| DELETE | `/api/questions/{id}` | 204, 404 |
+| POST | `/api/questions/{id}/answers` | 201, 400, 404 |
+| GET | `/api/questions/{id}/answers` | 200, 404 |
+| PUT | `/api/answers/{id}` | 200, 404 |
+| DELETE | `/api/answers/{id}` | 204, 404 |
+| POST | `/api/answers/{id}/vote` | 200, 404, 409 |
+| PATCH | `/api/answers/{id}/accept` | 200, 404 |
+| GET | `/api/questions/hello` | 200 (port de l'instance) |
+
+### Observabilité MS4 (Actuator)
+
+- <http://localhost:8084/actuator>
+- <http://localhost:8084/actuator/health> (MongoDB, Eureka, espace disque)
+- <http://localhost:8084/actuator/info>
+- <http://localhost:8084/actuator/metrics> et `/actuator/metrics/http.server.requests`
+- <http://localhost:8084/actuator/env>, `/beans`, `/mappings`, `/loggers`
+- Swagger : <http://localhost:8084/swagger-ui.html>
+
 ## Tests
 
 Exécutez tous les modules :
@@ -260,7 +315,7 @@ Les tests H2 vérifient les migrations Flyway et Hibernate. Le test Testcontaine
 - [ ] RabbitMQ
 - [ ] MS2 Quiz
 - [ ] MS3 Réclamations
-- [ ] MS4 Forum
+- [x] MS4 Forum (CRUD, MongoDB, Eureka, Actuator)
 - [ ] MS5 Duels et badges
 - [ ] Frontend Angular
 - [ ] MS6 UniLearn AI

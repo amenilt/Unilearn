@@ -15,6 +15,7 @@
         <module>platform/config-server</module>
         <module>platform/gateway</module>
         <module>services/ms1-courses</module>
+        <module>services/ms4-forum</module>
     </modules>
 
     <parent>

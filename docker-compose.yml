@@ -19,5 +19,15 @@ services:
       retries: 20
       start_period: 20s
 
+  mongo-ms4:
+    image: mongo:7
+    container_name: unilearn-mongo-ms4
+    restart: unless-stopped
+    ports:
+      - "${MS4_MONGO_PORT:-27017}:27017"
+    volumes:
+      - mongo-ms4-data:/data/db
+
 volumes:
   mysql-ms1-data:
+  mongo-ms4-data:

@@ -16,6 +16,10 @@ spring:
               uri: lb://MS1-COURSES
               predicates:
                 - Path=/api/courses,/api/courses/**,/api/chapters/**,/api/categories,/api/categories/**,/api/subjects,/api/subjects/**,/api/enrollments/**
+            - id: ms4-forum-api
+              uri: lb://MS4-FORUM
+              predicates:
+                - Path=/api/questions,/api/questions/**,/api/answers/**
             - id: ms1-courses-openapi
               uri: lb://MS1-COURSES
               predicates:
