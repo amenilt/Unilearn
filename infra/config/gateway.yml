@@ -1,0 +1,31 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: true
+              lower-case-service-id: true
+              include-expression: "serviceId matches 'MS[1-6]-(COURSES|QUIZZES|CLAIMS|FORUM|DUELS-BADGES|AI)'"
+          routes:
+            - id: ms1-courses-api
+              uri: lb://MS1-COURSES
+              predicates:
+                - Path=/api/courses,/api/courses/**,/api/chapters/**,/api/categories,/api/categories/**,/api/subjects,/api/subjects/**,/api/enrollments/**
+            - id: ms1-courses-openapi
+              uri: lb://MS1-COURSES
+              predicates:
+                - Path=/v3/api-docs/**,/swagger-ui/**,/swagger-ui.html
+
+management:
+  endpoint:
+    gateway:
+      access: read-only
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway

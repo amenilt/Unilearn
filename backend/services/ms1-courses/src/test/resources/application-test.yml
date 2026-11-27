@@ -1,0 +1,26 @@
+spring:
+  cloud:
+    config:
+      enabled: false
+  datasource:
+    url: jdbc:h2:mem:ms1-courses-test;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  flyway:
+    enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/unilearn
+          jwk-set-uri: http://localhost:8180/realms/unilearn/protocol/openid-connect/certs
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
