@@ -6,15 +6,20 @@ La plateforme vise à centraliser les cours, les quiz, les réclamations, le for
 
 ## Équipe et responsabilités
 
-| Responsabilité | Microservice |
-|---|---|
-| Cours, chapitres et leçons | MS1 Cours |
-| Quiz, questions et tentatives | MS2 Quiz |
-| Réclamations et suivi | MS3 Réclamations |
-| Forum Q&A | MS4 Forum |
-| Duels et badges | MS5 Duels & Badges |
-| Assistance et recommandations | MS6 UniLearn AI |
-| Gateway, découvrabilité, configuration | Socle Spring Cloud |
+Membres de l'équipe : **Ayoub Jleli**, **Ameni Ltaifi**, **Mohamed Rhouma**, **Akrem Jouini**.
+
+| Responsabilité | Microservice | Membre |
+|---|---|---|
+| Cours, chapitres et leçons | MS1 Cours | Ayoub Jleli |
+| Quiz, questions et tentatives | MS2 Quiz | Ameni Ltaifi |
+| Réclamations et suivi | MS3 Réclamations | Mohamed Rhouma |
+| Forum Q&A | MS4 Forum | Akrem Jouini |
+| Duels et badges | MS5 Duels & Badges | Toute l'équipe |
+| Assistance et recommandations | MS6 UniLearn AI | Toute l'équipe |
+| Config Server et Eureka | Socle Spring Cloud | Ayoub Jleli |
+| Gateway et Keycloak | Socle Spring Cloud | Ameni Ltaifi |
+| Docker Compose et RabbitMQ | Infrastructure | Mohamed Rhouma |
+| Documentation et dépôt Git | Dépôt | Akrem Jouini |
 
 ## Fonctionnalités principales
 
@@ -294,6 +299,44 @@ java -jar backend/platform/eureka-server/target/eureka-server-1.0.0-SNAPSHOT.jar
 - <http://localhost:8084/actuator/metrics> et `/actuator/metrics/http.server.requests`
 - <http://localhost:8084/actuator/env>, `/beans`, `/mappings`, `/loggers`
 - Swagger : <http://localhost:8084/swagger-ui.html>
+
+### Captures MS4 (Eureka et Actuator)
+
+**Dashboard Eureka 8761** : deux serveurs Eureka (8761 et 8762) répliqués et deux instances de MS4 (`ms4-forum:8084`, `ms4-forum:8094`).
+
+![Eureka 8761](docs/captures/ms4/eureka-8761.png)
+
+**Dashboard Eureka 8762** : le second serveur voit les mêmes instances.
+
+![Eureka 8762](docs/captures/ms4/eureka-8762.png)
+
+**Eureka sur le poste d'un membre de l'équipe** (Windows) :
+
+![Eureka poste équipe](docs/captures/ms4/eureka-pc-equipe.png)
+
+**Actuator `/actuator/health`** : MS4, MongoDB et Eureka à l'état `UP`.
+
+![Actuator health](docs/captures/ms4/actuator-health.png)
+
+**Actuator `/actuator/info`** :
+
+![Actuator info](docs/captures/ms4/actuator-info.png)
+
+**Actuator `/actuator/metrics`** :
+
+![Actuator metrics](docs/captures/ms4/actuator-metrics.png)
+
+**Actuator `/actuator/metrics/http.server.requests`** (requêtes traitées par l'API) :
+
+![Actuator http.server.requests](docs/captures/ms4/actuator-http-requests.png)
+
+**Swagger MS4** (`/swagger-ui.html`) :
+
+![Swagger MS4](docs/captures/ms4/swagger.png)
+
+**`GET /api/questions`** : questions avec leurs réponses imbriquées, votes et réponse acceptée.
+
+![API questions](docs/captures/ms4/api-questions.png)
 
 ## Tests
 
